@@ -18,6 +18,14 @@ import subprocess
 import pertpy as pt
 import scanpy as sc
 import seaborn as sns
+import random
+import torch
+
+# Set seed
+np.random.seed(0)
+random.seed(0)
+torch.manual_seed(0)
+torch.cuda.manual_seed_all(0)
 
 
 ######## get_args - start ##########################################################################
@@ -37,14 +45,14 @@ def get_args():
     #### Parameters
     parser.add_argument("-v","--version", action='version', version='%(prog)s version: Version 1.0.0 - Feb 2025')
     parser.add_argument("-o", "--out", help="Location of output directory where plots will be written.\nIf not specified, files will be written to the current working directory.", default='./', required=False)
-    parser.add_argument("--analysis", help="KO or Exon analysis.\nIf not specified, will do KO.", default='KO', required=False)
+    #parser.add_argument("--analysis", help="KO or Exon analysis.\nIf not specified, will do KO.", default='KO', required=False)
     parser.add_argument("--resolution", help="Resolution for leiden clustering.\nIf not specified, will do 0.25.", default='0.25', required=False)
 
     # https://www.10xgenomics.com/support/software/cell-ranger/latest/analysis/outputs/cr-outputs-h5-matrices
 
     group_required = parser.add_argument_group("required arguments")
     group_required.add_argument("-m", "--matrix_input", help="Path to matrix input HDF5 Format (i.e filtered_feature_bc_matrix.h5). ", required=True)
-    group_required.add_argument("-a", "--anno_csv", help="Path to matrix input directory. ", required=True)
+    group_required.add_argument("-a", "--anno_csv", help="Path to annotation matrix input.", required=True)
     group_required.add_argument("--timestamp", help="TimeStamp ", required=True)
 
     return parser.parse_args()
@@ -82,23 +90,24 @@ def main():
         vector_friendly=False
     )
 
-    # Set seed
-    np.random.seed(0)
+
+
 
     # Set Input Variables
     my_wd=args.out
     matrix_input = args.matrix_input
     annotation_input = args.anno_csv
-    analysis_type = args.analysis
+    #analysis_type = args.analysis
+    analysis_type = '.combined'
     resolution = float(args.resolution)
     log = open(my_wd+'scanpy_log.'+args.timestamp+'.txt', 'w+')
 
-    print("################################################################################")
-    print("############################# Running scanpy_analysis.py #############################")
-    print("################################################################################")
-    print("Output Directory:  " + my_wd)
-    print("Matrix Input File: " + matrix_input)
-    print("Annotation Input File: " + annotation_input)
+    log.write("################################################################################" +'\n')
+    log.write("############################# Running scanpy_analysis.py #############################" +'\n')
+    log.write("################################################################################" +'\n')
+    log.write("Output Directory:  " + my_wd +'\n')
+    log.write("Matrix Input File: " + matrix_input +'\n')
+    log.write("Annotation Input File: " + annotation_input + '\n')
 
 
     ################################################################################
@@ -106,40 +115,48 @@ def main():
     ################################################################################
 
 
-    print("\n########################### Loading and Formatting Annotation Input File ##########################")
+    log.write("\n########################### Loading and Formatting Annotation Input File ##########################" +'\n')
 
     #anno = pd.read_csv("select_pairs_1noise.csv", sep="\t")
     anno = pd.read_csv(annotation_input, sep="\t")
 
 
-    # Separating Genes KO / Exons Perturbations and intergenic
+    # Separating (but keep!) Genes KO / Exons Perturbations and intergenic
     # Also removing Non_Targeting
 
-    if analysis_type == 'KO':
-        anno = anno[anno['Cas9_Cas12a_targeted'].str.contains('_KO_|intergenic')]
-    elif analysis_type == 'Exon':
-        anno = anno[anno['Cas9_Cas12a_targeted'].str.contains('_pos_|_neg_|intergenic')]
-    else:
-        print('Error : wrong analysis type')
+    anno = anno[anno['Cas9_Cas12a_targeted'].str.contains('_pos_|_neg_|_KO_|intergenic')]
 
     # Extract name of gene targeted
     split_interval = anno["Cas9_Cas12a_targeted"].str.split("_", expand=True)
     anno["Gene"] = split_interval[0]
 
-    # Extract Exon / Exon_mod
-    if analysis_type == 'KO':
-        anno["Exon_mod"] = anno["Cas9_Cas12a_targeted"].str.extract(r'(.*)_')
-        anno["Exon"] = anno.loc[:, "Exon_mod"]
-        anno["Exon"] = anno["Exon"].str.replace('_KO','')
-    elif analysis_type == 'Exon':
-        anno["Exon_mod"] = anno["Cas9_Cas12a_targeted"].str.extract(r'([^_]*)_') # extract everything before first underscore
-        anno["Exon"] = anno.loc[:, "Exon_mod"]
+    # Extract Exon
+    anno["Exon"] = anno["Cas9_Cas12a_targeted"].str.extract(r'(.*)_')
+    #anno["Exon"].str.extract(r'(.*)_')
+
+
+    # Extract Analysis type
+    anno["Analysis_type"] = np.select(
+        [
+            anno['Cas9_Cas12a_targeted'].str.contains('_pos_|_neg_'),
+            anno['Cas9_Cas12a_targeted'].str.contains('_KO_'),
+            anno['Cas9_Cas12a_targeted'].str.contains('intergenic')
+        ],
+        ['Exon', 'Gene', 'Intergenic'],
+        default='Else' # Else SHOULD NOT BE PRESENT
+    )
+
+
+    # Combine targeted gene and analysis type
+
+    anno["Gene_and_Analyis"] = anno["Gene"] + '_' + anno["Analysis_type"]
+
 
     # Extract Replicate
     anno["Replicate"] = anno["Cas9_Cas12a_targeted"].str.replace('.*_','',regex=True)
 
     # Extract Pertubation status 
-    anno['Perturbation'] = np.where(anno['Exon']=='intergenic', 'Intergenic', 'Perturbed')
+    anno['Perturbation'] = np.where(anno['Gene']=='intergenic', 'Intergenic', 'Perturbed')
 
     # Set cell type
     anno['cell_type'] = 'single'
@@ -159,7 +176,7 @@ def main():
     anno = anno[anno["Project"] == "Full"]
 
 
-    print("\n########################### Loading Matrix Input File ##########################")
+    log.write("\n########################### Loading Matrix Input File ##########################" +'\n')
 
     # Load matrix
     #matrix_input = "/mnt/gridftp/guibletwm/CCBRRBL13/AGG_main_toy/outs/count"
@@ -169,11 +186,11 @@ def main():
     adata.var["mt"] = adata.var_names.str.startswith("MT-")
 
     # Handle any non-unique
-    print("Handling: UserWarning by making variable names unique.")
+    log.write("Handling: UserWarning by making variable names unique." +'\n')
     adata.var_names_make_unique()
 
 
-    print("\n########################### Filtering and Normalizing Matrix ##########################")
+    log.write("\n########################### Filtering and Normalizing Matrix ##########################" +'\n')
 
     sc.pp.calculate_qc_metrics(
     adata, qc_vars=["mt"], percent_top=None, log1p=False, inplace=True)
@@ -188,7 +205,7 @@ def main():
 
     # Intersect Annotation and Matrix
     bdata = adata[adata.obs['cell_barcode'].isin(anno.cell_barcode)]
-    bdata.obs = bdata.obs.merge(anno[['Cas9_Cas12a_targeted','num_features','Gene','Exon','Replicate','Perturbation','cell_type','Project','Sample']], how='left',left_index=True,right_index=True).copy()
+    bdata.obs = bdata.obs.merge(anno[['Cas9_Cas12a_targeted','num_features','Gene','Exon', 'Analysis_type', 'Gene_and_Analyis', 'Replicate','Perturbation','cell_type','Project','Sample']], how='left',left_index=True,right_index=True).copy()
 
     # save data
     bdata.write_h5ad("bdata." + analysis_type + ".h5ad")
@@ -219,17 +236,17 @@ def main():
     # bdata = sc.read_h5ad(("bdata." + analysis_type + ".scaled.h5ad")
 
 
-    print("\n########################### Reducing Dimensions ##########################")
+    log.write("\n########################### Reducing Dimensions ##########################" +'\n')
 
     # PCA
     sc.tl.pca(bdata, svd_solver="arpack",random_state=0)
     sc.pl.pca_variance_ratio(bdata, log=True)
     # Compute distances in the PCA space, and find cell neighbors
-    sc.pp.neighbors(bdata, n_neighbors=10, n_pcs=40,random_state=0)
+    sc.pp.neighbors(bdata, n_neighbors=10, n_pcs=40)#,random_state=0)
 
     # Generate UMAP features
-    sc.tl.umap(bdata,random_state=0)
-    sc.pl.umap(bdata, color=["Perturbation","Project","Sample"], use_raw=False, size=2, frameon=True, palette='rainbow', legend_fontsize='xx-small', save=analysis_type + '_origin.pdf')
+    sc.tl.umap(bdata)#,random_state=0)
+    sc.pl.umap(bdata, color=["Perturbation","Project","Sample","Analysis_type"], use_raw=False, size=2, frameon=True, palette='rainbow', legend_fontsize='xx-small', save=analysis_type + '_origin.pdf')
 
     # Clustering
     sc.tl.leiden(bdata, resolution=resolution,random_state=0,flavor="igraph",n_iterations=2,directed=False)
@@ -252,21 +269,21 @@ def main():
     # bdata = sc.read_h5ad(analysis_type + ".pca.h5ad")
 
 
-    print("\n########################### Calculating local perturbation signatures ##########################")
+    log.write("\n########################### Calculating local perturbation signatures ##########################" +'\n')
 
     # Run mixscape
     ms = pt.tl.Mixscape()
-    ms.perturbation_signature(adata=bdata, pert_key="Exon", control="intergenic",random_state=0)
+    ms.perturbation_signature(adata=bdata, pert_key="Gene_and_Analyis", control="intergenic_Intergenic", random_state=0)
     bdata_pert = bdata.copy()
     bdata_pert.X = bdata_pert.layers["X_pert"]
 
     # PCA
-    sc.pp.pca(bdata_pert,random_state=0,svd_solver='arpack')
+    sc.pp.pca(bdata_pert,svd_solver='arpack',random_state=0)
     sc.pp.neighbors(bdata_pert, metric="cosine",random_state=0)
 
     # UMAP
     sc.tl.umap(bdata_pert,random_state=0)
-    sc.pl.umap(bdata_pert, color=["Perturbation","Project","Sample"], palette= 'rainbow', frameon=True, legend_fontsize='xx-small', save=analysis_type + '.pertsig.pdf')
+    sc.pl.umap(bdata_pert, color=["Perturbation","Project","Sample","Analysis_type"], palette= 'rainbow', frameon=True, legend_fontsize='xx-small', save=analysis_type + '.pertsig.pdf')
 
     # Clustering
     sc.tl.leiden(bdata_pert, resolution=resolution,random_state=0,flavor="igraph",n_iterations=2,directed=False)
@@ -286,10 +303,10 @@ def main():
     #bdata_pert = sc.read_h5ad(analysis_type + ".pertsig.h5ad")
 
 
-    print("\n########################### Running Mixscape ##########################")
+    log.write("\n########################### Running Mixscape ##########################" +'\n')
 
     # Run Mixscape
-    ms.mixscape(adata=bdata_pert, control="intergenic", labels="Exon")#, layer="X_pert")
+    ms.mixscape(adata=bdata_pert, control="intergenic_Intergenic", labels="Gene_and_Analyis")#, layer="X_pert")
     bdata_mixscape = bdata_pert.copy()
     #bdata_mixscape = bdata.copy()
     #bdata_mixscape.X = bdata_mixscape.layers["X_pert"]
@@ -303,12 +320,12 @@ def main():
     bdata_perturb_only = bdata_mixscape[bdata_mixscape.obs["mixscape_class_global"] == "KO"].copy()
 
     # PCA
-    sc.pp.pca(bdata_perturb_only,random_state=0,svd_solver='arpack')
+    sc.pp.pca(bdata_perturb_only,svd_solver='arpack',random_state=0)
     sc.pp.neighbors(bdata_perturb_only, metric="cosine",random_state=0)
 
     # UMAP
     sc.tl.umap(bdata_perturb_only,random_state=0)
-    sc.pl.umap(bdata_perturb_only, color=["Perturbation","Project","Sample"], palette= 'rainbow', frameon=True, legend_fontsize='xx-small', save=analysis_type + '.perturebed_only.pdf')
+    sc.pl.umap(bdata_perturb_only, color=["Perturbation","Project","Sample","Analysis_type"], palette= 'rainbow', frameon=True, legend_fontsize='xx-small', save=analysis_type + '.perturebed_only.pdf')
 
     # Clustering
     sc.tl.leiden(bdata_perturb_only, resolution=resolution,random_state=0,flavor="igraph",n_iterations=2,directed=False)
@@ -320,11 +337,18 @@ def main():
     #bdata_perturb_only = sc.read_h5ad(analysis_type + ".perturb_only.h5ad")
 
 
-    print("\n########################### Computing Correlation Matrices ##########################")
+    log.write("\n########################### Computing Correlation Matrices ##########################" +'\n')
 
 
     #  Identify genes that are differentially expressed in the clusters 
     sc.tl.rank_genes_groups(bdata_perturb_only, groupby="leiden", method="wilcoxon")
+
+
+    # Extract log-fold changes
+    cluster_list = list(set(bdata_perturb_only.obs['leiden']))
+    lfc_df = sc.get.rank_genes_groups_df(bdata_perturb_only, group = cluster_list)
+    # Save as CSV
+    lfc_df.to_csv(analysis_type + ".logfoldchanges.csv")
 
     # Visualize marker genes - show only the top 4 scoring gene
     sc.pl.rank_genes_groups_dotplot(
@@ -361,32 +385,42 @@ def main():
     #    save=analysis_type + '.rank_genes_groups_heatmap.pdf'
     #)
 
+    # https://stackoverflow.com/questions/71371500/scanpy-correlation-matrix-with-dendrogram
+    sc.pl.correlation_matrix(bdata_perturb_only,  "Exon", dendrogram=True, figsize=(200, 150), save=analysis_type + '.correlation_matrix.pdf')
+    sc.pl.correlation_matrix(bdata_perturb_only,  "Gene_and_Analyis", dendrogram=True, figsize=(200, 150), save=analysis_type + 'GeneAnalysis.correlation_matrix.pdf')
 
-    sc.pl.correlation_matrix(bdata_perturb_only, "leiden", figsize=(5, 3.5), save=analysis_type + '.correlation_matrix.pdf')
+    # Exon perturb only
+    bdata_exonperturb_only = bdata_perturb_only[bdata_perturb_only.obs['Cas9_Cas12a_targeted'].str.contains('_pos_|_neg_')]
+    sc.pl.correlation_matrix(bdata_exonperturb_only,  "Exon", dendrogram=True, figsize=(200, 150), save=analysis_type + '.exonperturb.correlation_matrix.pdf')
+
+    #plt.figure(figsize=(5, 3.5))
+    #sc.pl.correlation_matrix(bdata_perturb_only, "Exon", dendrogram=True)
+    #plt.xticks([]) 
+    #plt.yticks([]) 
+    #plt.savefig('figures/'+analysis_type + '.correlation_matrix.pdf', format="pdf", dpi=300)
 
 
 
+    log.write("#Cell Files:\n")
+    log.write(os.path.abspath("./*.perturb_only_cells") +'\n')
 
-    print("#Cell Files:\n")
-    print(os.path.abspath("./*.perturb_only_cells"))
+    log.write("\n# UMAP and Leiden clustering:" +'\n')
+    log.write(os.path.abspath("./figures/umap*.pdf") +'\n')
 
-    print("\n# UMAP and Leiden clustering:")
-    print(os.path.abspath("./figures/umap*.pdf"))
+    log.write("\n# Figures after calculating local perturbation signatures:" +'\n')
+    log.write(os.path.abspath("./figures/umap*.pertsig.pdf") +'\n')
 
-    print("\n# Figures after calculating local perturbation signatures:")
-    print(os.path.abspath("./figures/umap*.pertsig.pdf"))
+    log.write("\n# Figures using Perturbed cells only:" +'\n')
+    log.write(os.path.abspath("./figures/umap*.perturebed_only.pdf")+'\n')
 
-    print("\n# Figures using Perturbed cells only:")
-    print(os.path.abspath("./figures/umap*.perturebed_only.pdf"))
+    log.write("\n# Dot Plots:" +'\n')
+    log.write(os.path.abspath("./figures/*.rank_genes_groups_dotplot.pdf") +'\n')
 
-    print("\n# Dot Plots:")
-    print(os.path.abspath("./figures/*.rank_genes_groups_dotplot.pdf"))
+    log.write("\n# Matrix Plots:" +'\n')
+    log.write(os.path.abspath("./figures/*.rank_genes_groups_matrixplot.pdf") +'\n')
 
-    print("\n# Matrix Plots:")
-    print(os.path.abspath("./figures/*.rank_genes_groups_matrixplot.pdf"))
-
-    print("\n# Correlation Matrix:")
-    print(os.path.abspath("./figures/*.correlation_matrix.pdf"))
+    log.write("\n# Correlation Matrix:" +'\n')
+    log.write(os.path.abspath("./figures/*.correlation_matrix.pdf") +'\n')
 
 
 
@@ -394,3 +428,4 @@ def main():
 if __name__ == "__main__":
         main()
     ######## main - end ################################################################################
+
