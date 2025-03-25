@@ -26,7 +26,13 @@ Example slurm run:
 
 timestamp=$(date +%Y%m%d_%H%M)
 
-python scanpy_analysis_final.py -o ./ --analysis Exon --resolution 0.10 -m /path_to/filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
-python scanpy_analysis_final.py -o ./ --analysis KO --resolution 0.15 -m /path_to/filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
+export PYTHONHASHSEED=0
+export NUMBA_CPU_NAME=generic
+
+timestamp=$(date +%Y%m%d_%H%M)
+
+python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 -m /mnt/gridftp/guibletwm/CCBRRBL13/AGG_main_toy/outs/count/filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
+python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m /mnt/gridftp/guibletwm/CCBRRBL13/AGG_main_toy/outs/count/filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
+python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m /mnt/gridftp/guibletwm/CCBRRBL13/AGG_main_toy/outs/count/filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
 
 ```
