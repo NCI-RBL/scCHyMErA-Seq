@@ -333,14 +333,17 @@ def main():
 		print("############################## Pre-Filter Summary ##############################")
 		unfiltered_df = pd.read_csv(sheets_list[sheet_number], header=0)
 		print(unfiltered_df)
-
 	elif EXCEL_FILE_PATH.endswith(".txt"):
 		unfiltered_df = pd.read_csv(EXCEL_FILE_PATH, sep='\t', header=0)
 		print(unfiltered_df)
-
 	elif EXCEL_FILE_PATH.endswith(".csv"):
 		unfiltered_df = pd.read_csv(EXCEL_FILE_PATH, sep=',', header=0)
 		print(unfiltered_df)
+	else:
+		print("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		print("ERROR: Input file must with extention xlsx, txt or csv")
+		print("This program will terminate.\n")
+		sys.exit()
 
 	# unfiltered_df = unfiltered_df.drop(unfiltered_df.columns[[0]], axis=1)
 	gene_list_count['total_row_count'] = len(unfiltered_df)
@@ -359,10 +362,6 @@ def main():
 	## Select logfold_col Column by Number
 	padj_column_name = select_column_by_number(unfiltered_df, "Adj. p-Value", "padj")
 
-
-
-
-
 	all_uniq_genes = unfiltered_df[gene_names_col_name].sort_values().unique().tolist()
 	all_uniq_genes_count = len(all_uniq_genes)
 	args.all_uniq_genes_count = all_uniq_genes_count
@@ -377,6 +376,10 @@ def main():
 	gene_list_count['pvals_adj_gene_count'] = len(pvals_adj_filter_df)
 	print("Filtered Row Count (pvals_adj < " + str(pvals_adj_filter) +") for all groups: " + str(gene_list_count['pvals_adj_gene_count']))
 
+	max_filtered_pvals_adj = pvals_adj_filter_df[padj_column_name].max()
+	min_filtered_pvals_adj = pvals_adj_filter_df[padj_column_name].min()
+	print("Range of filter pvals_adj: [" + str(min_filtered_pvals_adj) + ", " + str(max_filtered_pvals_adj) + "]")
+
 	## Get list of all genes
 	filtered_uniq_genes = pvals_adj_filter_df[gene_names_col_name].sort_values().unique().tolist()
 	filtered_uniq_genes_count = len(filtered_uniq_genes)
@@ -386,8 +389,6 @@ def main():
 		outfile.write("\n".join(filtered_uniq_genes) + "\n")
 	# Group_All_File_CSV.write("background;" + ",".join(filtered_uniq_genes) + "\n")
 	Group_All_File_CSV.write("background;" + ",".join(filtered_uniq_genes) + "\n")
-
-
 
 	query_dictionary={}
 	# query_dictionary['organism'] = 'hsapiens'
