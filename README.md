@@ -1,8 +1,20 @@
 # scCHyMErA-Seq
 Code repository for scCHyMErA-Seq project
-## <ins> Prerequisites </ins>
-For calculating  pseudoble count matrix and differentially expressed genes, DecoupleR and Pydesq2 packages are used.
+scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA targeted cells from large amount of single cell sequencing data using the scverse Packages. scCHyMErA-Seq requires cellranger matrix output "*matrix.h5" and a metadata file with cell barcode and targeting guide information.
 
+## Prerequisites
+[scanpy](https://github.com/scverse/scanpy)
+[anndata](https://github.com/scverse/anndata)
+[pertpy](https://github.com/scverse/pertpy) (mixscape analysis)
+[DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)
+[PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
+
+## Usage
+
+### Matrix preprocessing and mixscape implementation
+scanpy_mixscpe.py
+Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.
+**In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific  analysis.**
 
 Arguments for scanpy_analysis_final.py
 
