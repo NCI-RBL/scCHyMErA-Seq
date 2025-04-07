@@ -1,5 +1,6 @@
 # scCHyMErA-Seq
 Code repository for scCHyMErA-Seq project
+
 scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA targeted cells from large amount of single cell sequencing data using the scverse Packages. scCHyMErA-Seq requires cellranger matrix output "*matrix.h5" and a metadata file with cell barcode and targeting guide information.
 
 ## Prerequisites
@@ -12,8 +13,11 @@ scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA t
 ## Usage
 
 ### Matrix preprocessing and mixscape implementation
+
 scanpy_mixscpe.py
+
 Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.
+
 **In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific  analysis.**
 
 Arguments for scanpy_analysis_final.py
