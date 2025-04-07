@@ -1,5 +1,7 @@
 # scCHyMErA-Seq
 Code repository for scCHyMErA-Seq project
+Prerequisites
+For calculating  pseudoble count matrix and differentially expressed genes, DecoupleR and Pydesq2 packages are used 
 
 
 Arguments for scanpy_analysis_final.py
