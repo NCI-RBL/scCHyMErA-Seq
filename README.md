@@ -3,6 +3,33 @@ Code repository for scCHyMErA-Seq project
 
 scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA targeted cells from large amount of single cell sequencing data using the scverse Packages. scCHyMErA-Seq requires cellranger matrix output "*matrix.h5" and a metadata file with cell barcode and targeting guide information.
 
+## Prepare the matrix file
+
+```
+#Cell Ranger's CRISPR Guide Capture Algorithm was used
+
+#example library file (library.csv)
+
+sample,fastqs,lanes,library_type
+
+GEX,Sample_GEX,Any,Gene Expression
+
+Cas9,Sample_Cas9,Any,CRISPR Guide Capture
+
+Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
+
+#Run cellranger count
+
+module load cellranger
+
+cellranger count --id=s1 \
+       --transcriptome=refdata-gex-GRCh38-2024-A \
+       --libraries=library.csv \
+       --feature-ref=feature_reference.csv \
+       --create-bam=true
+
+```
+
 ## Prerequisites
 [scanpy](https://github.com/scverse/scanpy)
 
