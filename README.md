@@ -6,9 +6,9 @@ scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA t
 ## Prepare the matrix file
 
 ```
-#Cell Ranger's CRISPR Guide Capture Algorithm was used
+> Cell Ranger's CRISPR Guide Capture Algorithm was used
 
-#example library file (library.csv)
+> example library file (library.csv)
 
 sample,fastqs,lanes,library_type
 
@@ -18,11 +18,13 @@ Cas9,Sample_Cas9,Any,CRISPR Guide Capture
 
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 
-#Run cellranger count
+-------------------------------------------------
+
+> Run cellranger count function
 
 module load cellranger
 
-cellranger count --id=s1 \
+cellranger count --id=s \
        --transcriptome=refdata-gex-GRCh38-2024-A \
        --libraries=library.csv \
        --feature-ref=feature_reference.csv \
