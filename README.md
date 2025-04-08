@@ -5,12 +5,20 @@ scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA t
 
 ## Prerequisites
 [scanpy](https://github.com/scverse/scanpy)
+
 [anndata](https://github.com/scverse/anndata)
+
 [pertpy](https://github.com/scverse/pertpy) (mixscape analysis)
+
 [DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)
+
 [PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
 
 ## Usage
+
+##QC plots
+
+qc_cells.py
 
 ### Matrix preprocessing and mixscape implementation
 
@@ -19,6 +27,10 @@ scanpy_mixscpe.py
 Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.
 
 **In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific  analysis.**
+
+### Determination of differentially expressed genes for each perturbation
+
+pseudobulk_deg.py
 
 Arguments for scanpy_analysis_final.py
 
