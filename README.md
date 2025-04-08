@@ -16,7 +16,7 @@ scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA t
 
 ## Usage
 
-##QC plots
+## QC plots
 
 qc_cells.py
 
