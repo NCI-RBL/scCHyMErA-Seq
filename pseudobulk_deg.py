@@ -195,3 +195,7 @@ def main():
         results_df.to_csv(f'{unique}.csv')
         dc.plot_volcano_df(results_df,x='log2FoldChange',y='padj',top=5,save=f'{unique}.pdf',figsize=(8, 4))
 
+if __name__ == "__main__":
+        main()
+    ######## main - end ################################################################################
+
