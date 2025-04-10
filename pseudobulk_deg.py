@@ -37,8 +37,8 @@ def get_args():
     #### Parameters
     parser.add_argument("-v","--version", action='version', version='%(prog)s version: Version 1.0.0 - Feb 2025')
     parser.add_argument("-o", "--out", help="Location of output directory where plots will be written.\nIf not specified, files will be written to the current working directory.", default='./', required=False)
-    parser.add_argument("--analysis", help="KO or Exon analysis.\nIf not specified, will do KO.", default='KO', required=False)
-    parser.add_argument("--control", help="select either intergenic or intergenic+non-targeting as control.\nIf not specified, will consider only intergenic control.", default='intergenic', required=False)
+    parser.add_argument("--analysis", choices=['exon', 'gene'], help="gene or exon perturbation analysis.\nIf not specified, will do gene.", default='gene', required=False)
+    parser.add_argument("--control", choices=['all', 'intergenic'], help="select either intergenic or intergenic+non-targeting as control.\nIf not specified, will consider only intergenic control.", default='intergenic', required=False)
 
     # https://www.10xgenomics.com/support/software/cell-ranger/latest/analysis/outputs/cr-outputs-h5-matrices
 
@@ -84,7 +84,9 @@ def main():
     matrix_input = args.matrix_input
     annotation_input = args.anno_csv
     mixscape_pert = args.mixscape_passed
-    log = open(my_wd+'log.'+args.timestamp+'.txt', 'w+')
+    analysis_type = args.analysis
+    control_type = args.control
+    log = open(my_wd+'log.'+args.timestamp+'.txt', 'w+')   
 
     log.write("################################################################################" +'\n')
     log.write("############################# Running pseudobulk_deg.py #############################" +'\n')
@@ -106,7 +108,10 @@ def main():
     else:
         log.write('Error : wrong analysis type' +'\n')
 
-    anno = anno.loc[~anno['Cas9_Cas12a_targeted'].str.startswith('Non_Targeting')]
+    if control_type = 'intergenic':
+        anno = anno.loc[~anno['Cas9_Cas12a_targeted'].str.startswith('Non_Targeting')]
+    else:
+        anno = anno['Cas9_Cas12a_targeted'].str.replace('Non_Targeting','intergenic')
 
     split_interval = anno["Cas9_Cas12a_targeted"].str.split("_", expand=True)
     anno["Gene"] = split_interval[0]
