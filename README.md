@@ -45,7 +45,9 @@ cellranger count --id=s \
 
 ### QC plots
 
+```
 python qc_cells.py filtered_feature_bc_matrix.h5
+```
 
 ### Matrix preprocessing and mixscape implementation
 
