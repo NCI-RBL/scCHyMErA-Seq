@@ -13,11 +13,8 @@ scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA t
 #example library file (library.csv)
 
 sample,fastqs,lanes,library_type
-
 GEX,Sample_GEX,Any,Gene Expression
-
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture
-
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 
 -------------------------------------------------
@@ -25,7 +22,6 @@ Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 > Run cellranger count function
 
 module load cellranger
-
 cellranger count --id=s \
        --transcriptome=refdata-gex-GRCh38-2024-A \
        --libraries=library.csv \
@@ -49,7 +45,7 @@ cellranger count --id=s \
 
 ### QC plots
 
-qc_cells.py
+python qc_cells.py filtered_feature_bc_matrix.h5
 
 ### Matrix preprocessing and mixscape implementation
 
@@ -94,13 +90,13 @@ export NUMBA_CPU_NAME=generic
 
 timestamp=$(date +%Y%m%d_%H%M)
 
-python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
-python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
-python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
+python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
+python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
+python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
 
 ```
 
 ### Determination of differentially expressed genes for each perturbation
 
-pseudobulk_deg.py
+python pseudobulk_deg.py -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv -p exon_mxs_obs.csv --timestamp $timestamp
 
