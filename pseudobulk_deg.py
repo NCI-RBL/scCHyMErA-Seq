@@ -1,18 +1,24 @@
 # importing libraries
 import random
 import os
-import decoupler as dc
+import argparse
 import pandas as pd
 import numpy as np
 import torch
 import scanpy as sc
 import anndata as ad
+import decoupler as dc
 from pydeseq2.dds import DeseqDataSet, DefaultInference
 from pydeseq2.ds import DeseqStats
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from scipy.stats import median_abs_deviation
+
+# setting seed for reproducibility
+random.seed(0)
+np.random.seed(0)
+torch.manual_seed(0)
 
 ######## get_args - start ##########################################################################
 
@@ -61,11 +67,6 @@ def main():
     ######## Parse arguments ########
     args = get_args()
 
-# setting seed for reproducibility
-    random.seed(0)
-    np.random.seed(0)
-    torch.manual_seed(0)
-
 # seting figure parameters
     sc.settings.verbosity = 0
     sc.settings.set_figure_params(
@@ -92,6 +93,8 @@ def main():
     log.write("Annotation Input File: " + annotation_input + '\n')
     log.write("Mixscape generated Input file: " + mixscape_pert + '\n')
 
+    log.write("\n########################### Loading and Formatting Annotation Input File ##########################" +'\n')
+
 # loading metadata file with guide annotation for each cell
     anno = pd.read_csv(annotation_input, sep=",")
 
@@ -117,6 +120,9 @@ def main():
     anno['temp'] = anno.loc[:, 'cell_barcode']
     anno = anno.set_index('temp')
     anno.index.name = None
+    
+    log.write("\n########################### Loading Matrix Input File ##########################" +'\n')
+    
     adata = sc.read_10x_h5(matrix_input),gex_only=True)
     adata.var_names_make_unique()
     adata.var["mt"] = adata.var_names.str.startswith("MT-")
@@ -135,6 +141,8 @@ def main():
 # save count data
     bdata.X = np.round(bdata.X)
     bdata.layers['counts'] = bdata.X.copy()
+
+    log.write("\n########################### Processing Matrix File ##########################" +'\n')
 
 # normalize to 10,000 reads per cell
     sc.pp.normalize_total(bdata, target_sum=1e4)
@@ -163,6 +171,8 @@ def main():
     pert.obs["Exon"] = pert.obs["Exon"].str.replace('_','range')
     unique_exon = pert.obs[pert.obs['Exon'] != "intergenic"]['Exon'].unique().tolist()
 
+    log.write("\n########################### Generating pseudobulk-count ##########################" +'\n')
+
 # Do pseudobulk
     pdata = dc.get_pseudobulk(
         pert,
@@ -187,6 +197,8 @@ def main():
     pdata.write_h5ad("scanpy_pseudobulk.h5ad")
     pdata.write_csvs("pseudobulk_cells")
     inference = DefaultInference(n_cpus=8)
+    
+    log.write("\n########################### Determining differentially expressed genes ##########################" +'\n')
 
 # Run PyDesq2 to determine differentially expressed genes
     dds = DeseqDataSet(
