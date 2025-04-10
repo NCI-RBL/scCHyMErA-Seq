@@ -98,9 +98,9 @@ python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 -m filte
 python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
 python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
 
+```
 
 ### Determination of differentially expressed genes for each perturbation
 
 pseudobulk_deg.py
 
-```
