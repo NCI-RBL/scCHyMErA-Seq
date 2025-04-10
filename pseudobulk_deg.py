@@ -32,8 +32,6 @@ sc.settings.set_figure_params(
 matrix_input = args.matrix_input
 annotation_input = args.anno_csv
 mixscape_pert = args.mixscape_passed
-filt = pd.read_csv(mixscape_pert, sep=",")
-filt = filt[filt['mixscape_class_global'] != 'NP']
 anno = pd.read_csv(annotation_input, sep=",")
 anno = anno.loc[~anno['Cas9_Cas12a_targeted'].str.startswith('Non_Targeting')]
 anno = anno[~anno['Cas9_Cas12a_targeted'].str.contains('_KO_')]
