@@ -14,23 +14,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from scipy.stats import median_abs_deviation
 
-# setting seed for reproducibility
-random.seed(0)
-np.random.seed(0)
-torch.manual_seed(0)
-
-# seting figure parameters
-sc.settings.verbosity = 0
-sc.settings.set_figure_params(
-    dpi=300,
-    fontsize=7,
-    figsize=(8,8),
-    facecolor="white",
-    frameon=True,
-    transparent=True,
-    vector_friendly=False
-)
-
 ######## get_args - start ##########################################################################
 
 def get_args():
@@ -78,10 +61,36 @@ def main():
     ######## Parse arguments ########
     args = get_args()
 
+# setting seed for reproducibility
+    random.seed(0)
+    np.random.seed(0)
+    torch.manual_seed(0)
+
+# seting figure parameters
+    sc.settings.verbosity = 0
+    sc.settings.set_figure_params(
+        dpi=300,
+        fontsize=7,
+        figsize=(8,8),
+        facecolor="white",
+        frameon=True,
+        transparent=True,
+        vector_friendly=False
+    )
+
 # setting input variables
+    my_wd=args.out
     matrix_input = args.matrix_input
     annotation_input = args.anno_csv
     mixscape_pert = args.mixscape_passed
+    log = open(my_wd+'log.'+args.timestamp+'.txt', 'w+')
+
+    log.write("################################################################################" +'\n')
+    log.write("############################# Running pseudobulk_deg.py #############################" +'\n')
+    log.write("Output Directory:  " + my_wd +'\n')
+    log.write("Matrix Input File: " + matrix_input +'\n')
+    log.write("Annotation Input File: " + annotation_input + '\n')
+    log.write("Mixscape generated Input file: " + mixscape_pert + '\n')
 
 # loading metadata file with guide annotation for each cell
     anno = pd.read_csv(annotation_input, sep=",")
