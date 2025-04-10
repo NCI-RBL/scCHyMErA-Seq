@@ -98,5 +98,7 @@ python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_b
 
 ### Determination of differentially expressed genes for each perturbation
 
+```
 python pseudobulk_deg.py -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv -p exon_mxs_obs.csv --timestamp $timestamp
+```
 
