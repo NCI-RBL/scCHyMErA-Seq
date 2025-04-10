@@ -53,15 +53,16 @@ qc_cells.py
 
 ### Matrix preprocessing and mixscape implementation
 
+#### LDA
+
 scanpy_mixscpe.py
 
 Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.
 
 **In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific  analysis.**
 
-### Determination of differentially expressed genes for each perturbation
 
-pseudobulk_deg.py
+#### UMAP and Leiden clustering
 
 Arguments for scanpy_analysis_split.py and scanpy_analysis_combined.py.
 
@@ -71,7 +72,7 @@ Arguments for scanpy_analysis_split.py and scanpy_analysis_combined.py.
 - -m, --matrix_input : Path to matrix input HDF5 Format
 - -a, --anno_csv : Path to annotation matrix input
 
-
+**Also generate files from enrichment analysis**
 
 Example slurm run:
 
@@ -96,5 +97,10 @@ timestamp=$(date +%Y%m%d_%H%M)
 python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
 python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
 python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a select_pairs_1noise.csv --timestamp $timestamp
+
+
+### Determination of differentially expressed genes for each perturbation
+
+pseudobulk_deg.py
 
 ```
