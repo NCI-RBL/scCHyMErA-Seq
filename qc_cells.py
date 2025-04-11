@@ -1,4 +1,4 @@
-#importing libraries
+# Importing libraries
 import sys
 import random
 import os
@@ -16,12 +16,12 @@ from matplotlib import rcParams
 FIGSIZE = (4, 4)
 rcParams["figure.figsize"] = FIGSIZE
 
-#setting seeds for reproducibility
+# Setting seeds for reproducibility
 random.seed(0)
 np.random.seed(0)
 torch.manual_seed(0)
 
-##Plot genes detected
+# Plot genes detected
 def plot_genes_detected(adata, output_dir):
     fig, ax = plt.subplots(dpi=300)
     ax = sc.pl.violin(adata, ['Genes Detected'], jitter=0.4, show=False)
@@ -31,10 +31,11 @@ def plot_genes_detected(adata, output_dir):
     ax.set_xlabel("")
     ax.set_ylabel("Number of genes", fontsize=14, family='Arial')
     ax.set_title("Genes expressed per cell", fontsize=14, family='Arial')
+    fig.set_size_inches(2, 2)
     plt.savefig(os.path.join(output_dir, "gene_count.pdf"), transparent=True, dpi=300, format='pdf')
     plt.close(fig)
 
-#Plot UMI counts
+# Plot UMI counts
 def plot_umi_counts(adata, output_dir):
     fig, ax = plt.subplots(dpi=300)
     ax = sc.pl.violin(adata, ['UMI Counts'], jitter=0.4, show=False)
@@ -43,10 +44,11 @@ def plot_umi_counts(adata, output_dir):
     plt.xticks([])
     ax.set_ylabel("Number of UMIs", fontsize=14, family='Arial')
     ax.set_title("UMI counts per cell", fontsize=14, family='Arial')
+    fig.set_size_inches(2, 2)
     plt.savefig(os.path.join(output_dir, "umi_count.pdf"), transparent=True, dpi=300, format='pdf')
     plt.close(fig)
 
-#Plot mitochondrial gene percentage
+# Plot mitochondrial gene percentage
 def plot_mito_pct(adata, output_dir):
     fig, ax = plt.subplots(dpi=300)
     ax = sc.pl.violin(adata, ['Mitochondrial Gene Percentage'], jitter=0.4, show=False)
@@ -60,7 +62,7 @@ def plot_mito_pct(adata, output_dir):
     plt.savefig(os.path.join(output_dir, "mitochondrial.pdf"), transparent=True, dpi=300, format='pdf')
     plt.close(fig)
 
-#Correlation plot for total expressed genes vs UMI
+# Correlation plot for total expressed genes vs UMI
 def plot_correlation(adata, output_dir):
     fig, ax = plt.subplots(dpi=300)
     ax = sc.pl.scatter(adata, x='UMI Counts', y='Genes Detected', show=False)
@@ -71,7 +73,7 @@ def plot_correlation(adata, output_dir):
     fig.set_size_inches(2, 2)
     plt.savefig(os.path.join(output_dir, "correlation.pdf"), transparent=True, dpi=300, format='pdf')
     plt.close(fig)
-#
+# Loading cellranger matrix output
 def qc_violin_plots(matrix_input: str, output_dir: str = "."):
     os.makedirs(output_dir, exist_ok=True)
     print(f"Loading data from: {matrix_input}")
