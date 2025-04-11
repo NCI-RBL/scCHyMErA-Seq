@@ -72,7 +72,7 @@ def main():
     sc.settings.set_figure_params(
         dpi=300,
         fontsize=7,
-        figsize=(8,8),
+        figsize=(8,4),
         facecolor="white",
         frameon=True,
         transparent=True,
@@ -101,17 +101,17 @@ def main():
     anno = pd.read_csv(annotation_input, sep=",")
 
 # selecting Gene knockout / Exons Perturbations
-    if analysis_type == 'KO':
+    if analysis_type == 'gene':
         anno = anno[anno['Cas9_Cas12a_targeted'].str.contains('_KO_|intergenic')]
-    elif analysis_type == 'Exon':
+    elif analysis_type == 'exon':
         anno = anno[~anno['Cas9_Cas12a_targeted'].str.contains('_KO_')]
     else:
         log.write('Error : wrong analysis type' +'\n')
 
-    if control_type = 'intergenic':
+    if control_type == 'intergenic':
         anno = anno.loc[~anno['Cas9_Cas12a_targeted'].str.startswith('Non_Targeting')]
     else:
-        anno = anno['Cas9_Cas12a_targeted'].str.replace('Non_Targeting','intergenic')
+        anno['Cas9_Cas12a_targeted'] = anno['Cas9_Cas12a_targeted'].str.replace('Non_Targeting','intergenic')
 
     split_interval = anno["Cas9_Cas12a_targeted"].str.split("_", expand=True)
     anno["Gene"] = split_interval[0]
@@ -128,7 +128,7 @@ def main():
     
     log.write("\n########################### Loading Matrix Input File ##########################" +'\n')
     
-    adata = sc.read_10x_h5(matrix_input),gex_only=True)
+    adata = sc.read_10x_h5(matrix_input,gex_only=True)
     adata.var_names_make_unique()
     adata.var["mt"] = adata.var_names.str.startswith("MT-")
     sc.pp.calculate_qc_metrics(
@@ -218,8 +218,8 @@ def main():
         stat_res= DeseqStats(dds,contrast=["Exon",unique,"intergenic"], inference=inference,)
         stat_res.summary()
         results_df = stat_res.results_df
-        results_df.to_csv(f'{unique}.csv')
-        dc.plot_volcano_df(results_df,x='log2FoldChange',y='padj',top=5,save=f'{unique}.pdf',figsize=(8, 4))
+        results_df.to_csv(os.path.join(my_wd, f'{unique}.csv'))
+        dc.plot_volcano_df(results_df,x='log2FoldChange',y='padj',top=5,save=os.path.join(my_wd, f'{unique}.pdf'),figsize=(8, 4))
 
 if __name__ == "__main__":
         main()
