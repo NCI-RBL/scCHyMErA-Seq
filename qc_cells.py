@@ -5,7 +5,6 @@ import os
 import pandas as pd
 import numpy as np
 import torch
-import pertpy as pt
 import scanpy as sc
 import anndata as ad
 from scipy.stats import median_abs_deviation
@@ -16,10 +15,12 @@ import matplotlib.colors as mcolors
 from matplotlib import rcParams
 FIGSIZE = (4, 4)
 rcParams["figure.figsize"] = FIGSIZE
+
 #setting seeds for reproducibility
 random.seed(0)
 np.random.seed(0)
 torch.manual_seed(0)
+
 #loading file
 matrix_input = sys.argv[1]
 ##example path to matrix file
@@ -35,45 +36,53 @@ adata.obs.rename({"n_genes_by_counts": "Genes Detected"}, axis=1, inplace=True)
 adata.obs.rename({"total_counts": "UMI Counts"}, axis=1, inplace=True)
 adata.obs.rename({"pct_counts_mt": "Mitochondrial Gene Percentage"}, axis=1, inplace=True)
 ##Plot genes detected
-fig, ax = plt.subplots(figsize=(4, 4), dpi=300)
-ax = sc.pl.violin(adata, ['Genes Detected'], jitter=0.4, show=False)
-ax.tick_params(labelsize=12)
-ax.set_xticklabels([])
-plt.xticks([])
-_ = ax.set_xlabel("")
-_ = ax.set_ylabel("Number of genes", fontsize=14, family='Arial')
-_ = ax.set_title("Genes expressed per cell", fontsize=14, family='Arial')
-plt.savefig("gene_count.pdf", transparent=True, dpi=300, format='pdf')
-plt.close(fig)
+def plot_genes_detected(adata, output_dir):
+    fig, ax = plt.subplots(dpi=300)
+    ax = sc.pl.violin(adata, ['Genes Detected'], jitter=0.4, show=False)
+    ax.tick_params(labelsize=12)
+    ax.set_xticklabels([])
+    plt.xticks([])
+    ax.set_xlabel("")
+    ax.set_ylabel("Number of genes", fontsize=14, family='Arial')
+    ax.set_title("Genes expressed per cell", fontsize=14, family='Arial')
+    plt.savefig(os.path.join(output_dir, "gene_count.pdf"), transparent=True, dpi=300, format='pdf')
+    plt.close(fig)
+
 #Plot UMI counts
-fig, ax = plt.subplots(figsize=(4, 4), dpi=300)
-ax = sc.pl.violin(adata, ['UMI Counts'], jitter=0.4, show=False)
-ax.tick_params(labelsize=12)
-ax.set_xticklabels([])
-plt.xticks([])
-_ = ax.set_ylabel("Number of UMIs", fontsize=14, family='Arial')
-_ = ax.set_title("UMI counts per cell", fontsize=14, family='Arial')
-plt.savefig("umi_count.pdf", transparent=True, dpi=300, format='pdf')
-plt.close(fig)
+def plot_umi_counts(adata, output_dir):
+    fig, ax = plt.subplots(dpi=300)
+    ax = sc.pl.violin(adata, ['UMI Counts'], jitter=0.4, show=False)
+    ax.tick_params(labelsize=12)
+    ax.set_xticklabels([])
+    plt.xticks([])
+    ax.set_ylabel("Number of UMIs", fontsize=14, family='Arial')
+    ax.set_title("UMI counts per cell", fontsize=14, family='Arial')
+    plt.savefig(os.path.join(output_dir, "umi_count.pdf"), transparent=True, dpi=300, format='pdf')
+    plt.close(fig)
+
 #Plot mitochondrial gene percentage
-fig, ax = plt.subplots(figsize=(4, 4), dpi=300)
-ax = sc.pl.violin(adata, ['Mitochondrial Gene Percentage'], jitter=0.4, show=False)
-#ax.set_ylim(0,50)
-ax.tick_params(labelsize=12)
-ax.set_xticklabels([])
-_ = ax.set_ylabel("% mitochondrial genes", fontsize=14, family='Arial')
-_ = ax.set_title("Mitochondrial gene percentage per cell", fontsize=14, family='Arial')
-fig.set_size_inches(2, 2)
-plt.savefig("mit.pdf", transparent=True, dpi=300, format='pdf')
-plt.close(fig)
+def plot_mito_pct(adata, output_dir):
+    fig, ax = plt.subplots(dpi=300)
+    ax = sc.pl.violin(adata, ['Mitochondrial Gene Percentage'], jitter=0.4, show=False)
+   #ax.set_ylim(0,50)
+    ax.tick_params(labelsize=12)
+    ax.set_xticklabels([])
+    plt.xticks([])
+    ax.set_ylabel("% mitochondrial genes", fontsize=14, family='Arial')
+    ax.set_title("Mitochondrial gene percentage per cell", fontsize=14, family='Arial')
+    fig.set_size_inches(2, 2)
+    plt.savefig(os.path.join(output_dir, "mitochondrial.pdf"), transparent=True, dpi=300, format='pdf')
+    plt.close(fig)
+
 #Correlation plot for total expressed genes vs UMI
-fig, ax = plt.subplots(figsize=(4, 4), dpi=300)
-ax = sc.pl.scatter(adata, x='UMI Counts', y='Genes Detected', show=False)
-ax.tick_params(labelsize=12)
-_ = ax.set_xlabel("UMI counts", family='Arial')
-_ = ax.set_ylabel("Number of genes", fontsize=14, family='Arial')
-_ = ax.set_title("Genes vs UMI counts per cell", fontsize=14, family='Arial')
-fig.set_size_inches(2, 2)
-plt.savefig("correlation.pdf", transparent=True, dpi=300, format='pdf')
-plt.close(fig)
+def plot_correlation(adata, output_dir):
+    fig, ax = plt.subplots(dpi=300)
+    ax = sc.pl.scatter(adata, x='UMI Counts', y='Genes Detected', show=False)
+    ax.tick_params(labelsize=12)
+    ax.set_xlabel("UMI counts", family='Arial')
+    ax.set_ylabel("Number of genes", fontsize=14, family='Arial')
+    ax.set_title("Genes vs UMI counts per cell", fontsize=14, family='Arial')
+    fig.set_size_inches(2, 2)
+    plt.savefig(os.path.join(output_dir, "correlation.pdf"), transparent=True, dpi=300, format='pdf')
+    plt.close(fig)
 #
