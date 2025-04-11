@@ -2,6 +2,7 @@
 import random
 import os
 import argparse
+import sys
 import pandas as pd
 import numpy as np
 import torch
@@ -198,9 +199,9 @@ def main():
 
 # Return raw counts to X
     dc.swap_layer(pdata, 'counts', X_layer_key=None, inplace=True)
-    pdata.T.to_df().to_csv("matrix_file_exon")
-    pdata.write_h5ad("scanpy_pseudobulk.h5ad")
-    pdata.write_csvs("pseudobulk_cells")
+    pdata.T.to_df().to_csv(os.path.join(my_wd, "matrix_file_exon.csv"))
+    pdata.write_h5ad(os.path.join(my_wd, "scanpy_pseudobulk.h5ad"))
+    pdata.write_csvs(os.path.join(my_wd, "pseudobulk_cells"))
     inference = DefaultInference(n_cpus=8)
     
     log.write("\n########################### Determining differentially expressed genes ##########################" +'\n')
