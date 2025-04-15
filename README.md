@@ -44,7 +44,11 @@ python scanpy_analysis_split.py<br/>
 python scanpy_analysis_combined.py
 
 $\color{#FF0000}{Outputs}$: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
-**In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
+<p>
+Outputs
+<text style="color: red">ERROR</text>
+</p>
+**In addition, one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
 
 
 > #### UMAP and Leiden clustering
