@@ -24,7 +24,7 @@ cellranger count --id=s \
        --create-bam=true
 
 ```
-## Processing of matrix file and downstream analysis
+## Loading of matrix file and downstream analysis
 ### Prerequisites
 [scanpy](https://github.com/scverse/scanpy)<br/>
 [anndata](https://github.com/scverse/anndata)<br/>
@@ -33,14 +33,14 @@ cellranger count --id=s \
 [PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
 
 ### Usage
-### QC plots
+#### QC plots
 ```
 python qc_cells.py filtered_feature_bc_matrix.h5
 ```
 
-### Matrix preprocessing and mixscape implementation
+#### Matrix preprocessing and mixscape implementation
 
-#### LDA
+##### LDA
 
 scanpy_mixscpe.py
 
@@ -86,10 +86,8 @@ python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m filtere
 python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
 
 ```
-
-### Determination of differentially expressed genes for each perturbation
+#### Determination of differentially expressed genes for each perturbation
 
 ```
 python pseudobulk_deg.py -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv -p exon_mxs_obs.csv --timestamp $timestamp
 ```
-
