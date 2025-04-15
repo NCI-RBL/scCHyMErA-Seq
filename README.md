@@ -45,8 +45,7 @@ python scanpy_analysis_combined.py
 
 $\color{#FF0000}{Outputs}$: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
 <p>
-Outputs
-<text style="color: red">ERROR</text>
+<text style="color: red">Outputs</text>
 </p>
 **In addition, one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
 
