@@ -40,16 +40,16 @@ python qc_cells.py filtered_feature_bc_matrix.h5
 
 #### Matrix preprocessing and mixscape implementation
 
-python scanpy_analysis_split.py
+python scanpy_analysis_split.py<br/>
 python scanpy_analysis_combined.py
 
-Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
+<span style="color:blue">Outputs</span>: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
 **In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
 
 
 > #### UMAP and Leiden clustering
 
-Arguments for scanpy_analysis_split.py and scanpy_analysis_combined.py.
+<span style="color:blue">Arguments for scanpy_analysis_split.py and scanpy_analysis_combined.py.</span>
 
 - -o, --out : Location of output directory where plots will be written. If not specified, files will be written to the current working directory.
 - --analysis : KO or Exon analysis. scanpy_analysis_split.py only.
