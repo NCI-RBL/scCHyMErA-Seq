@@ -40,13 +40,10 @@ python qc_cells.py filtered_feature_bc_matrix.h5
 
 #### Matrix preprocessing and mixscape implementation
 
-##### LDA
+python scanpy_mixscpe.py
 
-scanpy_mixscpe.py
-
-Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.
-
-**In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific  analysis.**
+Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
+**In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
 
 
 #### UMAP and Leiden clustering
