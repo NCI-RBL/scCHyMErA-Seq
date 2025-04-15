@@ -13,8 +13,9 @@ GEX,Sample_GEX,Any,Gene Expression
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 -------------------------------------------------
-<code style="color : skyblue">Run cellranger count function</code>
-
+```diff
+Run cellranger count function in skyblue
+```
 module load cellranger
 cellranger count --id=s \
        --transcriptome=refdata-gex-GRCh38-2024-A \
