@@ -43,7 +43,7 @@ python qc_cells.py filtered_feature_bc_matrix.h5
 python scanpy_analysis_split.py<br/>
 python scanpy_analysis_combined.py
 
-<span style="color:blue">Outputs</span>.: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
+$\color{#FF0000}{Outputs}$: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
 **In addition one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
 
 
