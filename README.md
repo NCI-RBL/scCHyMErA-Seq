@@ -13,6 +13,7 @@ GEX,Sample_GEX,Any,Gene Expression
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 -------------------------------------------------
+```
 
 # $\textcolor{skyblue}{Run cellranger count function}$
 module load cellranger
