@@ -26,10 +26,10 @@ cellranger count --id=s \
 ```
 ## Processing of matrix file and downstream analysis
 ### Prerequisites
-[scanpy](https://github.com/scverse/scanpy)
-[anndata](https://github.com/scverse/anndata)
-[pertpy](https://github.com/scverse/pertpy) (mixscape analysis)
-[DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)
+[scanpy](https://github.com/scverse/scanpy)<br/>
+[anndata](https://github.com/scverse/anndata)<br/>
+[pertpy](https://github.com/scverse/pertpy) (mixscape analysis)<br/>
+[DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)<br/>
 [PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
 
 ### Usage
