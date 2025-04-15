@@ -14,7 +14,7 @@ Cas9,Sample_Cas9,Any,CRISPR Guide Capture
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 -------------------------------------------------
 
-$\color{skyblue}{Run cellranger count function}$
+$\textcolor{skyblue}{Run cellranger count function}$
 module load cellranger
 cellranger count --id=s \
        --transcriptome=refdata-gex-GRCh38-2024-A \
