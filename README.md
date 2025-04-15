@@ -70,7 +70,6 @@ Example slurm run:
 #SBATCH --mem=300g
 #SBATCH --job-name=schymeraseq
 
-
 timestamp=$(date +%Y%m%d_%H%M)
 
 export PYTHONHASHSEED=0
