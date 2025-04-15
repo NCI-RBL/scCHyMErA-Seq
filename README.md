@@ -3,7 +3,7 @@ Code repository for scCHyMErA-Seq project
 
 scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA targeted cells from large amount of single cell sequencing data using the scverse Packages. scCHyMErA-Seq requires cellranger matrix output "*matrix.h5" and a metadata file with cell barcode and targeting guide information.
 
-## Prepare the matrix file
+## Preparation of matrix file
 
 ```
 #Cell Ranger's CRISPR Guide Capture Algorithm was used. Example library file (library.csv)
@@ -24,22 +24,16 @@ cellranger count --id=s \
        --create-bam=true
 
 ```
-
-## Prerequisites
+## Processing of matrix file and downstream analysis
+### Prerequisites
 [scanpy](https://github.com/scverse/scanpy)
-
 [anndata](https://github.com/scverse/anndata)
-
 [pertpy](https://github.com/scverse/pertpy) (mixscape analysis)
-
 [DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)
-
 [PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
 
-## Usage
-
+### Usage
 ### QC plots
-
 ```
 python qc_cells.py filtered_feature_bc_matrix.h5
 ```
