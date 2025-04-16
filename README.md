@@ -15,20 +15,16 @@ cellranger count --id=s \
        --libraries=library.csv \
        --feature-ref=feature_reference.csv \
        --create-bam=true
-<ins>Example library.csv</ins>
+```
+
+Example library.csv
+```
 ---------------------------------------------
 sample,fastqs,lanes,library_type
 GEX,Sample_GEX,Any,Gene Expression
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
 ---------------------------------------------
-
-
-
-#
-
-
-
 ```
 ## Loading of matrix file and downstream analysis
 ### Prerequisites
