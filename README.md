@@ -17,11 +17,9 @@ cellranger count --id=s \
        --create-bam=true
 ```
 
-$${\color{red}Example library.csv file}$$
--! Example `#1589F0`
+- Example library.csv file
 
 
-<p>Hi here is some text <span>this is red</span>.</p>
 
 
 ```
