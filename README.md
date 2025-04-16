@@ -18,11 +18,12 @@ cellranger count --id=s \
 ```
 
 - Example library.csv file<br/>
+```
 sample,fastqs,lanes,library_type<br/>
 GEX,Sample_GEX,Any,Gene Expression<br/>
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture<br/>
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture<br/>
-
+```
 ---
 ## Loading of matrix file and downstream analysis
 ### Prerequisites
