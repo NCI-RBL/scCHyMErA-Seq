@@ -17,9 +17,7 @@ cellranger count --id=s \
        --create-bam=true
 ```
 
-- Example library.csv file
-
----
+- Example library.csv file<br/>
 sample,fastqs,lanes,library_type<br/>
 GEX,Sample_GEX,Any,Gene Expression<br/>
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture<br/>
