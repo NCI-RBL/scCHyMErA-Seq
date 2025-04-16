@@ -1,5 +1,5 @@
 # scCHyMErA-Seq
-> Code repository for scCHyMErA-Seq project<br/>
+> Code repository for scCHyMErA-Seq project
 
 scCHyMErA-Seq is a platform that efficiently induces exon perturbations as well as gene knockouts to generate single-cell RNA-sequencing phenotypic readouts. To streamline downstream analysis, we have included a ready-to-use pipeline built with scverse tools.<br/>  
 The following files are necessary to run the scCHyMErA-Seq pipeline.
@@ -17,7 +17,7 @@ cellranger count --id=s \
        --create-bam=true
 ```
 
-Example library.csv
+$${\color{red}Example library.csv file}$$
 ```
 sample,fastqs,lanes,library_type
 GEX,Sample_GEX,Any,Gene Expression
