@@ -18,6 +18,7 @@ cellranger count --id=s \
 ```
 
 $${\color{red}Example library.csv file}$$
+-! Example `#1589F0`
 ```
 sample,fastqs,lanes,library_type
 GEX,Sample_GEX,Any,Gene Expression
