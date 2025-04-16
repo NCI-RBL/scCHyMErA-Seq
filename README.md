@@ -19,15 +19,13 @@ cellranger count --id=s \
 
 - Example library.csv file
 
-
-
-
-```
+---
 sample,fastqs,lanes,library_type
 GEX,Sample_GEX,Any,Gene Expression
 Cas9,Sample_Cas9,Any,CRISPR Guide Capture
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
-```
+
+---
 ## Loading of matrix file and downstream analysis
 ### Prerequisites
 [scanpy](https://github.com/scverse/scanpy)<br/>
