@@ -25,6 +25,9 @@ Cas9,Sample_Cas9,Any,CRISPR Guide Capture<br/>
 Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture<br/>
 ```
 ---
+This will create matrix file and protospacer files along with many others
+
+
 ## Loading of files and downstream analysis
 ### Prerequisites
 - [scanpy](https://github.com/scverse/scanpy)<br/>
