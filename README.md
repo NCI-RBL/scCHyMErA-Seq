@@ -27,11 +27,11 @@ Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture<br/>
 ---
 ## Loading of matrix file and downstream analysis
 ### Prerequisites
-[scanpy](https://github.com/scverse/scanpy)<br/>
-[anndata](https://github.com/scverse/anndata)<br/>
-[pertpy](https://github.com/scverse/pertpy) (mixscape analysis)<br/>
-[DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)<br/>
-[PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
+- [scanpy](https://github.com/scverse/scanpy)<br/>
+- [anndata](https://github.com/scverse/anndata)<br/>
+- [pertpy](https://github.com/scverse/pertpy) (mixscape analysis)<br/>
+- [DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)<br/>
+- [PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
 
 ### Usage
 #### QC plots
