@@ -6,7 +6,6 @@ The following files are necessary to run the scCHyMErA-Seq pipeline.
 2. A metadata file with cell barcode and targeting guide information.
 
 ## Preparation of matrix file
-```
 Please use Cell Ranger's CRISPR Guide Capture Algorithm.
 <ins>Run cellranger count function</ins>
 ```
