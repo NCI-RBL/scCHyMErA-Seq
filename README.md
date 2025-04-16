@@ -1,5 +1,6 @@
 # scCHyMErA-Seq
 > Code repository for scCHyMErA-Seq project<br/>
+
 scCHyMErA-Seq is a platform that efficiently induces exon perturbations as well as gene knockouts to generate single-cell RNA-sequencing phenotypic readouts. To streamline downstream analysis, we have included a ready-to-use pipeline built with scverse tools.<br/>  
 The following files are necessary to run the scCHyMErA-Seq pipeline.
 1. A matrix file ("*matrix.h5") produced by cellranger.
