@@ -7,8 +7,7 @@ The following files are necessary to run the scCHyMErA-Seq pipeline.
 2. A metadata file with cell barcode and targeting guide information.
 
 ## Preparation of matrix file
-Please use cellranger count pipeline for CRISPR Guide Capture analysis.
-<ins>Run cellranger count function</ins>
+Please use cellranger count pipeline for CRISPR Guide Capture analysis. [See for details](https://www.10xgenomics.com/support/software/cell-ranger/8.0/analysis/running-pipelines/cr-gex-count)
 ```
 module load cellranger
 cellranger count --id=s \
@@ -16,7 +15,7 @@ cellranger count --id=s \
        --libraries=library.csv \
        --feature-ref=feature_reference.csv \
        --create-bam=true
-```Example library.csv```
+<ins>Example library.csv</ins>
 ---------------------------------------------
 sample,fastqs,lanes,library_type
 GEX,Sample_GEX,Any,Gene Expression
