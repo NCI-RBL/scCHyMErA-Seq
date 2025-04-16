@@ -1,27 +1,34 @@
 # scCHyMErA-Seq
-Code repository for scCHyMErA-Seq project
-
-scCHyMErA-Seq repository includes codes to efficiently filter and process gRNA targeted cells from large amount of single cell sequencing data using the scverse Packages. scCHyMErA-Seq requires cellranger matrix output "*matrix.h5" and a metadata file with cell barcode and targeting guide information.
+> Code repository for scCHyMErA-Seq project
+scCHyMErA-Seq is a platform that efficiently induces exon perturbations as well as gene knockouts to generate single-cell RNA-sequencing phenotypic readouts. To streamline downstream analysis, we have included a ready-to-use pipeline built with scverse tools.<br/>  
+The following files are necessary to run the scCHyMErA-Seq pipeline.
+1. A matrix file ("*matrix.h5") produced by cellranger.
+2. A metadata file with cell barcode and targeting guide information.
 
 ## Preparation of matrix file
-
 ```
-#Cell Ranger's CRISPR Guide Capture Algorithm was used. Example library file (library.csv)
---------------------------------------------------
-sample,fastqs,lanes,library_type
-GEX,Sample_GEX,Any,Gene Expression
-Cas9,Sample_Cas9,Any,CRISPR Guide Capture
-Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
--------------------------------------------------
-
-#Run cellranger count function
-
+Please use Cell Ranger's CRISPR Guide Capture Algorithm.
+<ins>Run cellranger count function</ins>
+```
 module load cellranger
 cellranger count --id=s \
        --transcriptome=refdata-gex-GRCh38-2024-A \
        --libraries=library.csv \
        --feature-ref=feature_reference.csv \
        --create-bam=true
+Example library file (library.csv)
+---------------------------------------------
+sample,fastqs,lanes,library_type
+GEX,Sample_GEX,Any,Gene Expression
+Cas9,Sample_Cas9,Any,CRISPR Guide Capture
+Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
+---------------------------------------------
+
+
+
+#
+
+
 
 ```
 ## Loading of matrix file and downstream analysis
@@ -35,16 +42,24 @@ cellranger count --id=s \
 ### Usage
 #### QC plots
 ```
-python qc_cells.py filtered_feature_bc_matrix.h5
+$ python qc_cells.py filtered_feature_bc_matrix.h5
 ```
 
 #### Matrix preprocessing and mixscape implementation
 
-python scanpy_analysis_split.py<br/>
-python scanpy_analysis_combined.py
+$ python scanpy_analysis_split.py<br/>
+$ python scanpy_analysis_combined.py
 
-$\color{#FF0000}{Outputs}$: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
+Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
 **In addition, one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
+
+
+
+
+
+
+
+
 
 
 > #### UMAP and Leiden clustering
