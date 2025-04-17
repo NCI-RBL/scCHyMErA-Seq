@@ -69,7 +69,7 @@ Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.<br
 - -m, --matrix_input : Path to matrix input HDF5 Format
 - -a, --anno_csv : Path to annotation matrix input
 
-**Also generate files from enrichment analysis**
+**Also generate inputs for chymeraseq.md**
 
 Example slurm run:
 
