@@ -90,7 +90,7 @@ Arguments for `scanpy_analysis_split.py` and `scanpy_analysis_combined.py`:
 | `-m`, `--matrix_input` | Path to input matrix file (`.h5`)                                           |
 | `-a`, `--anno_csv`     | Path to annotation file (CSV) with cell barcode and guide pairing           |
 
-> These scripts also generate inputs for `chymeraseq.md`.
+> These scripts also generate inputs for `chymeraseq.md` and `gprofiler_analysis.md`
 
 
 ### Example SLURM Job
