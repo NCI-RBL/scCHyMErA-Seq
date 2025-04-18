@@ -1,80 +1,101 @@
-# scCHyMErA-Seq
-> Code repository for scCHyMErA-Seq project
+# **scCHyMErA-Seq**
+> Code repository for the **scCHyMErA-Seq** project
 
-scCHyMErA-Seq is a platform that efficiently induces exon perturbations as well as gene knockouts to generate single-cell RNA-sequencing phenotypic readouts. To streamline downstream analysis, we have included a ready-to-use pipeline built with scverse tools.<br/>  
-The following files are necessary to run the scCHyMErA-Seq pipeline.
-1. A matrix file ("*matrix.h5") produced by cellranger.
-2. A metadata file with cell barcode and targeting guide information.
+**scCHyMErA-Seq** is a platform that enables efficient exon perturbations and gene knockouts, generating single-cell RNA-sequencing phenotypic readouts. To facilitate downstream analysis, this repository includes a ready-to-use pipeline built with `scverse` tools.
 
-## Generation of input file
-Please use cellranger count pipeline for CRISPR Guide Capture analysis. [See for details](https://www.10xgenomics.com/support/software/cell-ranger/8.0/analysis/running-pipelines/cr-gex-count)
-```
+---
+
+## Input Files
+
+To run the scCHyMErA-Seq pipeline, you’ll need:
+
+1. A matrix file (`*matrix.h5`) produced by **Cell Ranger**  
+2. A metadata file containing cell barcodes and guide information
+
+---
+
+## Generating Input Files
+
+Use the **Cell Ranger `count` pipeline** for CRISPR Guide Capture analysis.  
+ [Cell Ranger documentation](https://www.10xgenomics.com/support/software/cell-ranger/8.0/analysis/running-pipelines/cr-gex-count)
+
+```bash
 module load cellranger
 cellranger count --id=s \
-       --transcriptome=refdata-gex-GRCh38-2024-A \
-       --libraries=library.csv \
-       --feature-ref=feature_reference.csv \
-       --create-bam=true
+    --transcriptome=refdata-gex-GRCh38-2024-A \
+    --libraries=library.csv \
+    --feature-ref=feature_reference.csv \
+    --create-bam=true
 ```
-
-- Example library.csv file<br/>
-```
-sample,fastqs,lanes,library_type<br/>
-GEX,Sample_GEX,Any,Gene Expression<br/>
-Cas9,Sample_Cas9,Any,CRISPR Guide Capture<br/>
-Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture<br/>
-```
----
 This will create matrix file and protospacer files along with many others
 
 
-## Loading of files and downstream analysis
+Example: `library.csv`
+```csv
+sample,fastqs,lanes,library_type
+GEX,Sample_GEX,Any,Gene Expression
+Cas9,Sample_Cas9,Any,CRISPR Guide Capture
+Cas12a,Sample_Cas12a,Any,CRISPR Guide Capture
+```
+---
+
+## Loading Files and Downstream Analysis
+
 ### Prerequisites
-- [scanpy](https://github.com/scverse/scanpy)<br/>
-- [anndata](https://github.com/scverse/anndata)<br/>
-- [pertpy](https://github.com/scverse/pertpy) (mixscape analysis)<br/>
-- [DecoupleR](https://decoupler-py.readthedocs.io/en/latest/installation.html) (pseudobulk count matrix calculation)<br/>
-- [PyDESeq2](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) (determinating differentially expressed genes)
 
-### Usage
-#### QC plots
-```
-$ python qc_cells.py filtered_feature_bc_matrix.h5
-```
+Install the following Python packages:
 
-#### Matrix preprocessing and mixscape implementation
-
-$ python scanpy_analysis_split.py<br/>
-$ python scanpy_analysis_combined.py
-
-Outputs: UMAPs for all processed cells and LDA plots after applying mixscape.<br/>
-**In addition, one LDA plot for each cluster are generated, highlighting the cluster in color while rendering the others in grey to facilitate cluster-specific analysis.**
+- [`scanpy`](https://github.com/scverse/scanpy)  
+- [`anndata`](https://github.com/scverse/anndata)  
+- [`pertpy`](https://github.com/scverse/pertpy) — *for Mixscape analysis*  
+- [`DecoupleR`](https://decoupler-py.readthedocs.io/en/latest/installation.html) — *for pseudobulk matrix calculation*  
+- [`PyDESeq2`](https://pydeseq2.readthedocs.io/en/stable/usage/installation.html) — *for differential expression analysys*
 
 
+---
 
+## Usage
 
+### Quality Control
 
-
-
-
-
-
-> #### UMAP and Leiden clustering
-
-<span style="color:blue">Arguments for scanpy_analysis_split.py and scanpy_analysis_combined.py.</span>
-
-- -o, --out : Location of output directory where plots will be written. If not specified, files will be written to the current working directory.
-- --analysis : KO or Exon analysis. scanpy_analysis_split.py only.
-- --resolution : Resolution for leiden clustering. Value between 0 and 1. Higher value will create more clusters.
-- -m, --matrix_input : Path to matrix input HDF5 Format
-- -a, --anno_csv : Path to annotation matrix input
-
-**Also generate inputs for chymeraseq.md**
-
-Example slurm run:
-
+```bash
+python qc_cells.py filtered_feature_bc_matrix.h5
 ```
 
+---
+
+
+### Matrix Preprocessing & Mixscape
+
+```bash
+python scanpy_analysis_split.py
+python scanpy_analysis_combined.py
+```
+
+**Outputs**:
+- UMAPs of all processed cells  
+- Cluster-specific LDA plots (highlighted cluster vs grey others)
+
+---
+
+### UMAP + Leiden Clustering
+
+Arguments for `scanpy_analysis_split.py` and `scanpy_analysis_combined.py`:
+
+| Argument               | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| `-o`, `--out`          | Output directory for plots (default: current working directory)             |
+| `--analysis`           | Type of analysis: `KO` or `Exon` (used in `scanpy_analysis_split.py` only) |
+| `--resolution`         | Leiden clustering resolution (0–1; higher = more clusters)                  |
+| `-m`, `--matrix_input` | Path to input matrix file (`.h5`)                                           |
+| `-a`, `--anno_csv`     | Path to annotation file (CSV) with cell barcode and guide pairing           |
+
+> These scripts also generate inputs for `chymeraseq.md`.
+
+
+### Example SLURM Job
+
+```bash
 #!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -88,15 +109,30 @@ timestamp=$(date +%Y%m%d_%H%M)
 export PYTHONHASHSEED=0
 export NUMBA_CPU_NAME=generic
 
-timestamp=$(date +%Y%m%d_%H%M)
+python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 \
+    -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv \
+    --timestamp $timestamp
 
-python scanpy_analysis_split.py -o ./ --analysis Exon --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
-python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
-python scanpy_analysis_combined.py -o ./ --resolution 0.15 -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv --timestamp $timestamp
+python scanpy_analysis_split.py -o ./ --analysis KO --resolution 0.15 \
+    -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv \
+    --timestamp $timestamp
 
+python scanpy_analysis_combined.py -o ./ --resolution 0.15 \
+    -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv \
+    --timestamp $timestamp
 ```
-#### Determination of differentially expressed genes for each perturbation
 
+---
+
+### Bulk Differential Expression Analysis
+
+To identify differentially expressed genes for each perturbation:
+
+```bash
+python pseudobulk_deg.py \
+    -m filtered_feature_bc_matrix.h5 \
+    -a paired_hgRNA_calls_per_cell.csv \
+    -p exon_mxs_obs.csv \
+    --timestamp $timestamp
 ```
-python pseudobulk_deg.py -m filtered_feature_bc_matrix.h5 -a paired_hgRNA_calls_per_cell.csv -p exon_mxs_obs.csv --timestamp $timestamp
-```
+
