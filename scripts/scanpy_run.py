@@ -186,6 +186,8 @@ def main():
     sc.pl.highly_variable_genes(bdata, save=analysis_type + '.genes_variability.pdf')
     bdata.raw = bdata
     bdata = bdata[:, bdata.var.highly_variable]
+
+    # Regress out Total counts per Cell and Mitochondrial gene expression percentage
     sc.pp.regress_out(bdata, ["total_counts", "pct_counts_mt"])
     sc.pp.scale(bdata, max_value=10)
     # Save processed data
