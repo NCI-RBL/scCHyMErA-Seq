@@ -38,7 +38,7 @@ def get_args():
     #### Parameters
     parser.add_argument("-v","--version", action='version', version='%(prog)s version: Version 1.0.0 - Feb 2025')
     parser.add_argument("-o", "--out", help="Location of output directory where plots will be written.\nIf not specified, files will be written to the current working directory.", default='./', required=False)
-    parser.add_argument("--analysis", choices=['exon', 'gene'], help="gene or exon perturbation analysis.\nIf not specified, will do gene.", default='gene', required=False)
+    parser.add_argument("--analysis", choices=['Exon', 'KO'], help="gene or exon perturbation analysis.\nIf not specified, will do gene.", default='KO', required=False)
     parser.add_argument("--control", choices=['all', 'intergenic'], help="select either intergenic or intergenic+non-targeting as control.\nIf not specified, will consider only intergenic control.", default='intergenic', required=False)
 
     # https://www.10xgenomics.com/support/software/cell-ranger/latest/analysis/outputs/cr-outputs-h5-matrices
