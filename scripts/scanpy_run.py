@@ -120,7 +120,7 @@ def main():
     else:
         log.write('Error : wrong analysis type' +'\n')
 
-    mixscape_column == analysis_type
+    mixscape_column = analysis_type
 
     if control_type == 'intergenic':
         anno = anno.loc[~anno['Cas9_Cas12a_targeted'].str.startswith('Non_Targeting')]
