@@ -8,6 +8,7 @@ import numpy as np
 from natsort import natsorted
 import torch
 import subprocess
+import glob
 import scanpy as sc
 import pertpy as pt
 import anndata as ad
@@ -321,28 +322,27 @@ def main():
         save=analysis_type + '.rank_genes_groups_matrixplot.pdf'
     )
 
+    
     log.write("#Cell Files:\n")
-    log.write(os.path.abspath("./*.perturb_only_cells") +'\n')
+    log.write("\n".join(glob.glob("*.perturb_only_cells")) + '\n')
 
     log.write("\n# UMAP and Leiden clustering:" +'\n')
-    log.write(os.path.abspath("./figures/umap*.pdf") +'\n')
+    log.write("\n".join(glob.glob("figures/umap*.pdf")) + '\n')
 
     log.write("\n# Figures after calculating local perturbation signatures:" +'\n')
-    log.write(os.path.abspath("./figures/umap*.pertsig.pdf") +'\n')
+    log.write("\n".join(glob.glob("figures/umap*.pertsig.pdf")) + '\n')
 
     log.write("\n# Figures using Perturbed cells only:" +'\n')
-    log.write(os.path.abspath("./figures/umap*.perturebed_only.pdf")+'\n')
+    log.write("\n".join(glob.glob("figures/umap*.perturebed_only.pdf")) + '\n')
 
     log.write("\n# Dot Plots:" +'\n')
-    log.write(os.path.abspath("./figures/*.rank_genes_groups_dotplot.pdf") +'\n')
+    log.write("\n".join(glob.glob("figures/*.rank_genes_groups_dotplot.pdf")) + '\n')
 
     log.write("\n# Matrix Plots:" +'\n')
-    log.write(os.path.abspath("./figures/*.rank_genes_groups_matrixplot.pdf") +'\n')
+    log.write("\n".join(glob.glob("figures/*.rank_genes_groups_matrixplot.pdf")) + '\n')
 
     log.write("\n# Correlation Matrix:" +'\n')
-    log.write(os.path.abspath("./figures/*.correlation_matrix.pdf") +'\n')
-
-
+    log.write("\n".join(glob.glob("figures/*.correlation_matrix.pdf")) + '\n')
 
 
 if __name__ == "__main__":
