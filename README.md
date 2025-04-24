@@ -136,6 +136,8 @@ python pseudobulk_deg.py \
     --timestamp $timestamp
 ```
 
+---
+
 ### Functional Enrichment Analysis
 
 To run functional enrichment analysis using [g:Profiler](https://biit.cs.ut.ee/gprofiler/gost):
