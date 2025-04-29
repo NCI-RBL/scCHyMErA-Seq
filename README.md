@@ -3,6 +3,9 @@
 
 **scCHyMErA-Seq** is a platform that enables efficient exon perturbations and gene knockouts, generating single-cell RNA-sequencing phenotypic readouts. To facilitate downstream analysis, this repository includes a ready-to-use pipeline built with `scverse` tools.
 
+![scCHyMErA_github_04292025](https://github.com/user-attachments/assets/d358caf1-802e-491d-887c-703570b1a90c)
+
+
 ---
 
 ## Input Files
