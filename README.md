@@ -1,7 +1,7 @@
 # **scCHyMErA-Seq**
 > Code repository for the **scCHyMErA-Seq** project
 
-[![DOI](https://zenodo.org/badge/935602685.svg)](https://doi.org/10.5281/zenodo.18186606)
+[![DOI](https://zenodo.org/badge/935602685.svg)](https://doi.org/10.5281/zenodo.18186607)
 
 
 **scCHyMErA-Seq** is a platform that enables efficient exon perturbations and gene knockouts, generating single-cell RNA-sequencing phenotypic readouts. To facilitate downstream analysis, this repository includes a ready-to-use pipeline built with `scverse` tools.
